@@ -13,8 +13,8 @@
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
-    <!-- Scripts -->
-    <?php echo app('Illuminate\Foundation\Vite')(['resources/sass/app.scss', 'resources/js/app.js']); ?>
+    <!-- Bootstrap 5 (CDN) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -79,6 +79,8 @@
             <?php echo $__env->yieldContent('content'); ?>
         </main>
     </div>
+
+    <!-- Bootstrap 5 JS (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
-<?php /**PATH /Users/akimotokeiju/Desktop/vending_machine/resources/views/layouts/app.blade.php ENDPATH**/ ?>
+</html><?php /**PATH /Users/akimotokeiju/Desktop/vending_machine/resources/views/layouts/app.blade.php ENDPATH**/ ?>

@@ -56,7 +56,7 @@
         </div>
 
         <button type="submit" class="btn btn-warning">新規登録</button>
-        <a href="{{ route('products.create') }}" class="btn btn-secondary">戻る</a>
+        <a href="{{ route('products.index') }}" class="btn btn-secondary">戻る</a>
     </form>
 </div>
 @endsection

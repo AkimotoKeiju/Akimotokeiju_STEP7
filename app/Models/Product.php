@@ -27,30 +27,52 @@ class Product extends Model
     }
 
     /**
-     * 売上とのリレーション (1対多)
-     */
-    public function sales()
-    {
-        return $this->hasMany(Sale::class);
-    }
-
-    /**
      * 商品一覧の取得および検索処理
      */
     public function getListWithSearch($searchName = null, $searchCompany = null)
     {
         $query = $this->with('company');
 
-        // 商品名による曖昧検索
         if (!empty($searchName)) {
             $query->where('product_name', 'LIKE', "%{$searchName}%");
         }
 
-        // メーカーによる完全一致検索
         if (!empty($searchCompany)) {
             $query->where('company_id', $searchCompany);
         }
 
         return $query->get();
+    }
+
+    /**
+     * 商品詳細・1件取得
+     */
+    public function getDetail($id)
+    {
+        return $this->with('company')->findOrFail($id);
+    }
+
+    /**
+     * 商品新規登録
+     */
+    public function registProduct($data)
+    {
+        return $this->create($data);
+    }
+
+    /**
+     * 商品更新
+     */
+    public function updateProduct($data)
+    {
+        return $this->update($data);
+    }
+
+    /**
+     * 商品削除
+     */
+    public function deleteProduct()
+    {
+        return $this->delete();
     }
 }

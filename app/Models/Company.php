@@ -9,16 +9,25 @@ class Company extends Model
 {
     use HasFactory;
 
-    // 保存や更新を許可するカラムを指定
     protected $fillable = [
         'company_name',
         'street_address',
         'representative_name',
     ];
 
-    // 「1つの会社は、複数の商品（Products）を持つ」という1対多のリレーションを定義
+    /**
+     * リレーション (1対多)
+     */
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    /**
+     * 会社一覧を取得する
+     */
+    public function getCompanyList()
+    {
+        return $this->all();
     }
 }

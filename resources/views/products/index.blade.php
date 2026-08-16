@@ -56,7 +56,7 @@
                     <td>{{ $product->product_name }}</td>
                     <td>¥{{ number_format($product->price) }}</td>
                     <td>{{ $product->stock }}</td>
-                    <td>{{ $product->company->company_name ?? '' }}</td>
+                    <td>{{ $product->company?->company_name ?? '' }}</td>
                     <td>
                         <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm">詳細</a>
                         <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline" onsubmit="return confirm('本当に削除しますか？');">

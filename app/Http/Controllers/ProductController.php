@@ -19,8 +19,10 @@ class ProductController extends Controller
         $searchCompany = $request->input('search_company');
 
         $productModel = new Product();
+        $companyModel = new Company();
+
         $products = $productModel->getListWithSearch($searchName, $searchCompany);
-        $companies = Company::all();
+        $companies = $companyModel->getCompanyList();
 
         return view('products.index', compact('products', 'companies'));
     }
@@ -30,7 +32,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $companies = Company::all();
+        $companyModel = new Company();
+        $companies = $companyModel->getCompanyList();
+
         return view('products.create', compact('companies'));
     }
 
@@ -41,17 +45,14 @@ class ProductController extends Controller
     {
         $data = $request->validated();
 
-        // 画像の保存処理
         if ($request->hasFile('img_path')) {
-            $filename = $request->file('img_path')->getClientOriginalName();
-            $path = $request->file('img_path')->storeAs('products', $filename, 'public');
-            $data['img_path'] = $path;
+            $data['img_path'] = $request->file('img_path')->store('products', 'public');
         }
 
-        Product::create($data);
+        $productModel = new Product();
+        $productModel->registProduct($data);
 
-        // 仕様書指示：登録完了後は新規登録画面へリダイレクト
-        return redirect()->route('products.create')->with('success', '商品を登録しました');
+        return redirect()->route('products.index')->with('success', '商品を登録しました');
     }
 
     /**
@@ -59,7 +60,9 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = Product::with('company')->findOrFail($id);
+        $productModel = new Product();
+        $product = $productModel->getDetail($id);
+
         return view('products.show', compact('product'));
     }
 
@@ -68,8 +71,11 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product = Product::findOrFail($id);
-        $companies = Company::all();
+        $productModel = new Product();
+        $companyModel = new Company();
+
+        $product = $productModel->getDetail($id);
+        $companies = $companyModel->getCompanyList();
 
         return view('products.edit', compact('product', 'companies'));
     }
@@ -77,27 +83,19 @@ class ProductController extends Controller
     /**
      * 更新処理
      */
-    public function update(ProductRequest $request, $id)
+    public function update(ProductRequest $request, Product $product)
     {
-        $product = Product::findOrFail($id);
         $data = $request->validated();
 
-        // 画像の更新処理
         if ($request->hasFile('img_path')) {
-            // 古い画像を削除
-            if ($product->img_path && Storage::disk('public')->exists($product->img_path)) {
-                Storage::disk('public')->delete($product->img_path);
-            }
-
-            $filename = $request->file('img_path')->getClientOriginalName();
-            $path = $request->file('img_path')->storeAs('products', $filename, 'public');
-            $data['img_path'] = $path;
+            $data['img_path'] = $request->file('img_path')->store('products', 'public');
+        } else {
+            unset($data['img_path']);
         }
 
-        $product->update($data);
+        $product->updateProduct($data);
 
-        // 仕様書指示：更新完了後は編集画面へリダイレクト
-        return redirect()->route('products.edit', $product->id)->with('success', '商品情報を更新しました');
+        return redirect()->route('products.index')->with('success', '商品を更新しました');
     }
 
     /**
@@ -105,14 +103,14 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = Product::findOrFail($id);
+        $productModel = new Product();
+        $product = $productModel->getDetail($id);
 
-        // 画像ファイルの削除
         if ($product->img_path && Storage::disk('public')->exists($product->img_path)) {
             Storage::disk('public')->delete($product->img_path);
         }
 
-        $product->delete();
+        $product->deleteProduct();
 
         return redirect()->route('products.index')->with('success', '商品を削除しました');
     }

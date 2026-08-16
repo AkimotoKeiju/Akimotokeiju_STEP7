@@ -2,20 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+use Illuminate\Support\Facades\Auth;
 
-// トップページ (/) にアクセスしたら商品一覧へリダイレクト
-Route::get('/', function () {
-    return redirect()->route('products.index');
-});
 
+// トップおよび /home へのアクセスは商品一覧へ転送
+Route::redirect('/', '/products');
+Route::redirect('/home', '/products');
+
+// 認証ルーティング (ログイン・会員登録等)
 Auth::routes();
 
-Route::get('/home', function () {
-    return redirect()->route('products.index');
-});
-
-// ログインしているユーザーのみアクセス可能なルーティング群
-Route::group(['middleware' => 'auth'], function () {
-    // 商品関連のCRUD機能（一覧、新規登録、詳細、編集、更新、削除）
-    Route::resource('products', ProductController::class);
-});
+// 商品管理機能 (要ログインにする場合は auth ミドルウェアで囲む)
+Route::resource('products', ProductController::class);

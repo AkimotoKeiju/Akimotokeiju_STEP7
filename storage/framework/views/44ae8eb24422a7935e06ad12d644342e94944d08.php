@@ -55,7 +55,7 @@
                     <td><?php echo e($product->product_name); ?></td>
                     <td>¥<?php echo e(number_format($product->price)); ?></td>
                     <td><?php echo e($product->stock); ?></td>
-                    <td><?php echo e($product->company->company_name ?? ''); ?></td>
+                    <td><?php echo e($product->company?->company_name ?? ''); ?></td>
                     <td>
                         <a href="<?php echo e(route('products.show', $product->id)); ?>" class="btn btn-info btn-sm">詳細</a>
                         <form action="<?php echo e(route('products.destroy', $product->id)); ?>" method="POST" class="d-inline" onsubmit="return confirm('本当に削除しますか？');">
